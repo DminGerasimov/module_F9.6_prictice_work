@@ -5,11 +5,9 @@ Practise work
  git clone https://github.com/DminGerasimov/module_F9.6_prictice_work
 
 2. Setup python venv
-	'''
-	python -m venv venv
+	`python -m venv venv
 	venv\Scripts\activate	or source env/bin/activate
-	pip install -r requirements.txt
-	'''
+	pip install -r requirements.txt`
 2. Run server
 	python server.py
 

@@ -44,9 +44,12 @@ async def on_shutdown(app:web.Application):
 async def newshandler(request:web.Request):
     if request.body_exists:
         newsMessage = await request.text()
+        counter = 0
         for ws in request.app["sockets"]:
             await ws.send_str(newsMessage)
-        return web.Response(text='sent data:"' + newsMessage[:12] + '..."', status=200)
+            counter +=1
+        if counter !=0: # если подключены сокеты, подтверждаем отправку
+         return web.Response(text='sent data:"' + newsMessage[:12] + '..."', status=200)
     return web.Response(text='null data sent to server or no connected websockets.', status=400)
 
 

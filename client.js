@@ -1,4 +1,5 @@
       var conn = null;
+      const timerId = null;
       function log(msg) {
         var control = $('#log');
         control.html(control.html() + msg + '<br/>');
@@ -6,14 +7,16 @@
       }
 
       function checkState(){
-        if (conn.readyState == 1){
-          $('#status').text('ws opened.');
-        }
-        if (conn.readyState == 0) {
-          $('#status').text('ws opening...');
-        }
-        if (conn.readyState == 2) {
-          $('#status').text('ws closing...');
+        if (conn){
+          if (conn.readyState == 1){
+            $('#status').text('ws opened.');
+          }
+          if (conn.readyState == 0) {
+            $('#status').text('ws opening...');
+          }
+          if (conn.readyState == 2) {
+            $('#status').text('ws closing...');
+          }
         }
       }
 
@@ -22,21 +25,21 @@
         var wsUri = (window.location.protocol=='https:'&&'wss://'||'ws://') + '127.0.0.1:8080';
         conn = new WebSocket(wsUri); //открываем соединение
         log('Connecting...');
-        const timerId = setInterval(checkState, 10);
+
         conn.onopen = function() {
           log('Connected.');
+          const timerId = setInterval(checkState, 500);
           update_ui();
         };
+        
         conn.onmessage = function(e) {
-          if (e.data =='ping') {
-            log('ping ok: ' + e.data);
-          }
-          else {log('Received: ' + e.data);
-        }
+         log('Received: ' + e.data);
         };
+
         conn.onclose = function(e) {
           log('Disconnected.');
           conn = null;
+          clearInterval(timerId);
           update_ui();
         };
       }
@@ -52,10 +55,8 @@
         if (conn == null) {
           $('#connect').html('Connect');
           $('#status').text('ws closed.');
-          clearInterval(timerId);
         } else {
           $('#connect').html('Disconnect');
-          clearInterval(timerId);
         }
       }
       $('#connect').click(function() {

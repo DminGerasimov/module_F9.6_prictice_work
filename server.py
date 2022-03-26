@@ -46,7 +46,7 @@ async def newshandler(request:web.Request):
         newsMessage = await request.text()
         for ws in request.app["sockets"]:
             await ws.send_str(newsMessage)
-            return web.Response(text='sent data:"' + newsMessage[:12] + '..."', status=200)
+        return web.Response(text='sent data:"' + newsMessage[:12] + '..."', status=200)
     return web.Response(text='null data sent to server or no connected websockets.', status=400)
 
 
